@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} | Prolance Project{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Top Breadcrumb / Back Link -->
+    <div class="mb-6 flex items-center justify-between">
+        <a href="{% url 'projects:browse' %}" class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-zinc-600 hover:text-neo-black uppercase tracking-wider">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Back to Open Opportunities</span>
+        </a>
+
+        {% if user.is_authenticated and user.is_freelancer_user %}
+            <form method="post" action="{% url 'projects:toggle_save' project.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                    <i data-lucide="bookmark" class="w-4 h-4 {% if is_saved %}fill-neo-yellow text-neo-black{% endif %}"></i>
+                    <span>{% if is_saved %}Saved in Bookmarks{% else %}Bookmark Project{% endif %}</span>
+                </button>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left 2 Cols: Main Project Specifications -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <div class="card-neo bg-white p-8">
+                
+                <!-- Category, Type & Status -->
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider border-2 border-neo-black bg-neo-yellow shadow-neo-sm">
+                            <i data-lucide="{{ project.category.icon|default:'layers' }}" class="w-3.5 h-3.5"></i>
+                            {{ project.category.name }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-bold uppercase bg-neo-bg border border-neo-black">
+                            {{ project.get_project_type_display }}
+                        </span>
+                    </div>
+
+                    <span class="badge-neo 
+                        {% if project.status == 'open' %}bg-emerald-100 text-emerald-950
+                        {% elif project.status == 'in_progress' %}bg-blue-100 text-blue-950
+                        {% elif project.status == 'review' %}bg-amber-100 text-amber-950
+                        {% elif project.status == 'completed' %}bg-purple-100 text-purple-950
+                        {% else %}bg-zinc-200 text-zinc-800{% endif %}">
+                        <span class="w-2 h-2 rounded-full {% if project.status == 'open' %}bg-emerald-500 animate-pulse{% elif project.status == 'in_progress' %}bg-blue-500{% elif project.status == 'review' %}bg-amber-500{% elif project.status == 'completed' %}bg-purple-500{% else %}bg-zinc-500{% endif %}"></span>
+                        {{ project.get_status_display }}
+                    </span>
+                </div>
+
+                <!-- Project Title -->
+                <h1 class="text-2xl sm:text-4xl font-black text-neo-black tracking-tight mb-4 leading-tight">
+                    {{ project.title }}
+                </h1>
+
+                <!-- Key Meta Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-xl border-2 border-neo-black bg-neo-bg font-mono text-xs mb-6">
+                    <div>
+                        <span class="text-zinc-500 block uppercase font-bold">Published</span>
+                        <span class="font-bold text-neo-black">{{ project.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div>
+                        <span class="text-zinc-500 block uppercase font-bold">Target Deadline</span>
+                        <span class="font-bold text-neo-black">{{ project.deadline|date:"M d, Y" }}</span>
+                    </div>
+                    <div>
+                        <span class="text-zinc-500 block uppercase font-bold">Proposals</span>
+                        <span class="font-bold text-neo-black">{{ project.proposals.count }} submitted</span>
+                    </div>
+                </div>
+
+                <!-- Full Description -->
+                <div class="prose max-w-none text-zinc-800 font-medium leading-relaxed mb-8">
+                    <h3 class="text-lg font-black text-neo-black mb-2">Scope of Work & Specification</h3>
+                    <div class="whitespace-pre-line text-sm sm:text-base">{{ project.description }}</div>
+                </div>
+
+                <!-- Required Skills -->
+                <div class="pt-6 border-t-2 border-neo-black">
+                    <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-neo-black mb-3">
+                        Required Core Competencies
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in project.required_skills.all %}
+                            <a href="{% url 'projects:browse' %}?skill={{ skill.slug }}" class="px-3 py-1 bg-neo-bg border-2 border-neo-black rounded-lg text-xs font-bold font-mono text-neo-black hover:bg-neo-yellow transition shadow-neo-sm">
+                                #{{ skill.name }}
+                            </a>
+                        {% empty %}
+                            <span class="text-xs text-zinc-500 italic">No specific skill keywords tagged.</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Workspace Access Card (If In Progress or Completed) -->
+            {% if project.status != 'open' and project.hired_freelancer %}
+                {% if user == project.client or user == project.hired_freelancer or user.is_staff %}
+                    <div class="card-neo bg-neo-mint p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-white border-2 border-neo-black flex items-center justify-center">
+                                <i data-lucide="layers" class="w-6 h-6 text-neo-black"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-lg text-neo-black">Active Project Workspace</h3>
+                                <p class="text-xs font-medium text-zinc-800">
+                                    Assigned Freelancer: <strong>{{ project.hired_freelancer.get_display_name }}</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <a href="{% url 'workspace:room' project.slug %}" class="btn-neo-yellow py-2 px-5">
+                            Open Workspace
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+        </div>
+
+        <!-- Right 1 Col: Financials, Client Profile, & Actions -->
+        <div class="space-y-6">
+            
+            <!-- Budget & Action Card -->
+            <div class="card-neo bg-white p-6 space-y-5">
+                <div>
+                    <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Project Budget</span>
+                    <div class="text-3xl font-black text-neo-black mt-1">
+                        ${{ project.budget_min|floatformat:0 }} – ${{ project.budget_max|floatformat:0 }}
+                    </div>
+                    <span class="text-xs font-mono text-zinc-500">
+                        {{ project.get_project_type_display }} • Currency: USD
+                    </span>
+                </div>
+
+                <!-- Dynamic Action States based on User and Role -->
+                <div class="pt-4 border-t-2 border-neo-black">
+                    {% if user.is_authenticated %}
+                        
+                        <!-- Client Owner Actions -->
+                        {% if user == project.client %}
+                            <div class="space-y-3">
+                                <a href="{% url 'proposals:project_proposals' project.slug %}" class="btn-neo-yellow w-full py-3 flex items-center justify-center gap-2">
+                                    <i data-lucide="users" class="w-4 h-4"></i>
+                                    <span>Review Proposals ({{ project.proposals.count }})</span>
+                                </a>
+
+                                {% if project.status == 'open' %}
+                                    <a href="{% url 'projects:edit' project.slug %}" class="btn-neo-white w-full py-2.5 flex items-center justify-center gap-2">
+                                        <i data-lucide="edit" class="w-4 h-4"></i>
+                                        <span>Edit Project Spec</span>
+                                    </a>
+                                    <a href="{% url 'projects:close' project.slug %}" class="btn-neo-white w-full py-2 text-xs text-red-700 hover:bg-red-50 flex items-center justify-center gap-1">
+                                        <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                                        <span>Close Listing</span>
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                        <!-- Freelancer User Actions -->
+                        {% elif user.is_freelancer_user %}
+                            {% if project.status == 'open' %}
+                                {% if user_proposal %}
+                                    <div class="p-4 rounded-xl border-2 border-neo-black bg-yellow-50 space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-mono font-bold uppercase text-zinc-600">Your Bid</span>
+                                            <span class="badge-neo bg-neo-yellow text-[11px]">{{ user_proposal.get_status_display }}</span>
+                                        </div>
+                                        <p class="text-sm font-black text-neo-black">${{ user_proposal.proposed_budget }} ({{ user_proposal.estimated_days }} days)</p>
+                                        <p class="text-xs text-zinc-600 italic">"{{ user_proposal.cover_letter|truncatechars:80 }}"</p>
+                                        {% if user_proposal.status == 'pending' %}
+                                            <form method="post" action="{% url 'proposals:withdraw' user_proposal.id %}" class="pt-2">
+                                                {% csrf_token %}
+                                                <button type="submit" onclick="return confirm('Are you sure you wish to withdraw this proposal?')" class="text-xs text-red-600 font-bold underline hover:text-red-800">
+                                                    Withdraw Proposal
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <a href="{% url 'proposals:submit' project.slug %}" class="btn-neo-yellow w-full py-3 text-base flex items-center justify-center gap-2">
+                                        <i data-lucide="send" class="w-5 h-5"></i>
+                                        <span>Submit Proposal</span>
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <div class="p-4 rounded-xl border-2 border-neo-black bg-zinc-100 text-center">
+                                    <p class="text-xs font-bold text-zinc-600">This project is no longer accepting new proposals.</p>
+                                </div>
+                            {% endif %}
+
+                        <!-- Client browsing another client's project -->
+                        {% else %}
+                            <div class="p-3 bg-zinc-100 rounded-xl border border-zinc-300 text-center">
+                                <p class="text-xs font-medium text-zinc-600">You are browsing as a client. Only registered freelancers can bid on projects.</p>
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <!-- Anonymous Visitor -->
+                        <div class="space-y-3 text-center">
+                            <p class="text-xs font-bold text-zinc-600">Sign in with a freelancer account to submit your proposal.</p>
+                            <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn-neo-yellow w-full py-2.5">
+                                Sign In to Apply
+                            </a>
+                            <a href="{% url 'accounts:register' %}?role=freelancer" class="btn-neo-white w-full py-2 text-xs">
+                                Create Freelancer Account
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Client Summary Card -->
+            <div class="card-neo bg-white p-6">
+                <span class="text-xs font-mono font-bold uppercase text-zinc-500 block mb-3">About the Client</span>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="{{ project.client.client_profile.get_avatar_url|default:'https://api.dicebear.com/7.x/identicon/svg?seed=client' }}" alt="Client" class="w-12 h-12 rounded-xl border-2 border-neo-black object-cover bg-teal-100">
+                    <div>
+                        <h4 class="font-black text-sm text-neo-black">{{ project.client.client_profile.company_name|default:project.client.get_display_name }}</h4>
+                        <p class="text-xs font-mono text-zinc-500">{{ project.client.client_profile.location|default:"Global Client" }}</p>
+                    </div>
+                </div>
+                <div class="text-xs text-zinc-600 font-medium space-y-2 pt-3 border-t border-zinc-100 font-mono">
+                    <div class="flex justify-between">
+                        <span>Projects Posted:</span>
+                        <span class="font-bold text-neo-black">{{ project.client.posted_projects.count }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Member Since:</span>
+                        <span class="font-bold text-neo-black">{{ project.client.date_joined|date:"M Y" }}</span>
+                    </div>
+                    {% if project.client.client_profile.company_website %}
+                        <div class="pt-1">
+                            <a href="{{ project.client.client_profile.company_website }}" target="_blank" rel="noopener" class="text-neo-indigo underline font-bold">
+                                {{ project.client.client_profile.company_website }}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Report Listing Link -->
+            <div class="text-center">
+                <a href="{% url 'reviews:report_content' %}?project_id={{ project.id }}" class="text-[11px] font-mono text-zinc-500 hover:text-neo-coral underline flex items-center justify-center gap-1">
+                    <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+                    <span>Report this listing for investigation</span>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Related Opportunities -->
+    {% if related_projects %}
+        <div class="mt-14 pt-10 border-t-2 border-neo-black">
+            <h2 class="text-2xl font-black text-neo-black mb-6">Related Projects in {{ project.category.name }}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% for related in related_projects %}
+                    {% include 'components/project_card.html' with project=related %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Client Dashboard | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Top Client Header -->
+    <div class="card-neo bg-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+            <img src="{{ user.client_profile.get_avatar_url|default:'https://api.dicebear.com/7.x/identicon/svg?seed=client' }}" alt="Client" class="w-20 h-20 rounded-2xl border-2 border-neo-black object-cover bg-teal-100 shadow-neo-sm">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="badge-neo bg-neo-indigo text-white text-[11px]">Client Organization</span>
+                    <span class="text-xs font-mono font-bold text-zinc-500">{{ user.client_profile.company_name|default:user.get_display_name }}</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-neo-black">
+                    Employer Dashboard
+                </h1>
+                <p class="text-xs font-medium text-zinc-600 mt-0.5">
+                    Manage project scopes, review incoming freelancer proposals, and oversee active milestones.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{% url 'projects:create' %}" class="btn-neo-yellow btn-neo-sm flex items-center gap-1.5 px-4 py-2.5">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Post New Project</span>
+            </a>
+            <a href="{% url 'accounts:freelancers_list' %}" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                <i data-lucide="users" class="w-4 h-4"></i>
+                <span>Browse Talent</span>
+            </a>
+            <a href="{% url 'accounts:edit_profile' %}" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                <span>Company Settings</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Vital Metrics Bar -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <div class="card-neo bg-white p-5">
+            <span class="text-[11px] font-mono font-bold uppercase text-zinc-500 block">Total Posted</span>
+            <span class="text-3xl font-black text-neo-black mt-1 block">{{ posted_projects.count }}</span>
+            <span class="text-[11px] font-mono text-zinc-500 font-bold">All Listings</span>
+        </div>
+
+        <div class="card-neo bg-white p-5">
+            <span class="text-[11px] font-mono font-bold uppercase text-zinc-500 block">Open Opportunities</span>
+            <span class="text-3xl font-black text-neo-black mt-1 block">{{ open_count }}</span>
+            <span class="text-[11px] font-mono text-emerald-600 font-bold">Accepting Bids</span>
+        </div>
+
+        <div class="card-neo bg-white p-5">
+            <span class="text-[11px] font-mono font-bold uppercase text-zinc-500 block">Active Workspaces</span>
+            <span class="text-3xl font-black text-neo-black mt-1 block">{{ active_count }}</span>
+            <span class="text-[11px] font-mono text-indigo-600 font-bold">Under Contract</span>
+        </div>
+
+        <div class="card-neo bg-white p-5">
+            <span class="text-[11px] font-mono font-bold uppercase text-zinc-500 block">Delivered Contracts</span>
+            <span class="text-3xl font-black text-neo-black mt-1 block">{{ completed_count }}</span>
+            <span class="text-[11px] font-mono text-purple-600 font-bold">Completed & Reviewed</span>
+        </div>
+
+    </div>
+
+    <!-- Recent Candidate Proposals Across Projects -->
+    <div class="space-y-4">
+        <div class="flex items-center justify-between pb-2 border-b-2 border-neo-black">
+            <h2 class="text-xl font-black text-neo-black flex items-center gap-2">
+                <i data-lucide="inbox" class="w-5 h-5 text-neo-black"></i>
+                <span>Recent Proposals Received ({{ recent_proposals.count }})</span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for prop in recent_proposals %}
+                <div class="card-neo bg-white p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[11px] font-mono text-zinc-500">{{ prop.created_at|timesince }} ago</span>
+                            <span class="badge-neo bg-neo-yellow text-[10px]">{{ prop.get_status_display }}</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-neo-black mb-1 line-clamp-1">
+                            For: <a href="{% url 'projects:detail' prop.project.slug %}" class="underline">{{ prop.project.title }}</a>
+                        </h4>
+                        
+                        <div class="flex items-center gap-3 my-3 p-2.5 bg-neo-bg rounded-xl border border-zinc-200">
+                            <img src="{{ prop.freelancer.freelancer_profile.get_avatar_url }}" alt="{{ prop.freelancer.get_display_name }}" class="w-10 h-10 rounded-xl border border-neo-black object-cover bg-yellow-100">
+                            <div class="truncate">
+                                <span class="font-black text-xs text-neo-black block truncate">{{ prop.freelancer.get_display_name }}</span>
+                                <span class="text-[10px] font-mono text-zinc-500">Rating: {{ prop.freelancer.freelancer_profile.average_rating }} ★</span>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-zinc-600 italic line-clamp-2 mb-3">"{{ prop.cover_letter }}"</p>
+                    </div>
+
+                    <div class="pt-3 border-t-2 border-neo-black flex items-center justify-between">
+                        <span class="font-black text-sm text-neo-black">${{ prop.proposed_budget }}</span>
+                        <a href="{% url 'proposals:project_proposals' prop.project.slug %}" class="btn-neo-yellow btn-neo-sm">
+                            Evaluate
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-span-full card-neo bg-white py-8 text-center text-zinc-500 font-mono text-xs">
+                    No proposals received yet across your active projects.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Complete Project Management Table -->
+    <div class="space-y-4">
+        <div class="flex items-center justify-between pb-2 border-b-2 border-neo-black">
+            <h2 class="text-xl font-black text-neo-black flex items-center gap-2">
+                <i data-lucide="folder-kanban" class="w-5 h-5 text-neo-black"></i>
+                <span>All Posted Project Listings ({{ posted_projects.count }})</span>
+            </h2>
+        </div>
+
+        <div class="card-neo bg-white overflow-x-auto p-0">
+            <table class="w-full text-left text-sm font-medium">
+                <thead class="bg-neo-bg border-b-2 border-neo-black font-mono text-xs uppercase text-zinc-600">
+                    <tr>
+                        <th class="py-3.5 px-6">Project Title</th>
+                        <th class="py-3.5 px-6">Category</th>
+                        <th class="py-3.5 px-6">Budget Range</th>
+                        <th class="py-3.5 px-6">Proposals</th>
+                        <th class="py-3.5 px-6">Status</th>
+                        <th class="py-3.5 px-6 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y-2 divide-neo-black font-mono text-xs">
+                    {% for p in posted_projects %}
+                        <tr class="hover:bg-yellow-50/50 transition">
+                            <td class="py-4 px-6 font-bold text-neo-black font-sans text-sm">
+                                <a href="{% url 'projects:detail' p.slug %}" class="hover:underline">
+                                    {{ p.title }}
+                                </a>
+                                {% if p.hired_freelancer %}
+                                    <span class="block text-[11px] font-mono text-zinc-500 font-normal mt-0.5">
+                                        Assigned to: <strong>{{ p.hired_freelancer.get_display_name }}</strong>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-zinc-700">{{ p.category.name }}</td>
+                            <td class="py-4 px-6 font-bold text-neo-black">
+                                ${{ p.budget_min|floatformat:0 }} – ${{ p.budget_max|floatformat:0 }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <a href="{% url 'proposals:project_proposals' p.slug %}" class="inline-flex items-center gap-1 font-bold underline text-neo-indigo">
+                                    <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                                    <span>{{ p.proposal_count_annotated }} bids</span>
+                                </a>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="badge-neo 
+                                    {% if p.status == 'open' %}bg-emerald-100 text-emerald-950
+                                    {% elif p.status == 'in_progress' %}bg-blue-100 text-blue-950
+                                    {% elif p.status == 'review' %}bg-amber-100 text-amber-950
+                                    {% elif p.status == 'completed' %}bg-purple-100 text-purple-950
+                                    {% else %}bg-zinc-200 text-zinc-800{% endif %}">
+                                    {{ p.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    {% if p.status != 'open' and p.hired_freelancer %}
+                                        <a href="{% url 'workspace:room' p.slug %}" class="btn-neo-mint btn-neo-sm">
+                                            Workspace
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'proposals:project_proposals' p.slug %}" class="btn-neo-yellow btn-neo-sm">
+                                            Proposals
+                                        </a>
+                                        <a href="{% url 'projects:edit' p.slug %}" class="btn-neo-white btn-neo-sm">
+                                            Edit
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-10 text-center text-zinc-500">
+                                You have not posted any projects yet.
+                                <a href="{% url 'projects:create' %}" class="underline font-bold text-neo-black block mt-1">
+                                    Click here to publish your first project specification
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

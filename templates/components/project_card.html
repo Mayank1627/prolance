@@ -1,0 +1,85 @@
+<div class="card-neo card-neo-hover flex flex-col justify-between h-full bg-white relative group">
+    <div>
+        <!-- Top Metadata Badges -->
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-black uppercase tracking-wider border-2 border-neo-black shadow-neo-sm
+                    {% if project.category.color_theme == 'yellow' %}bg-neo-yellow text-neo-black
+                    {% elif project.category.color_theme == 'mint' %}bg-neo-mint text-neo-black
+                    {% elif project.category.color_theme == 'indigo' %}bg-neo-indigo text-white
+                    {% elif project.category.color_theme == 'coral' %}bg-neo-coral text-white
+                    {% elif project.category.color_theme == 'pink' %}bg-neo-pink text-white
+                    {% else %}bg-neo-lime text-neo-black{% endif %}">
+                    <i data-lucide="{{ project.category.icon|default:'layers' }}" class="w-3.5 h-3.5"></i>
+                    {{ project.category.name }}
+                </span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase bg-neo-bg border border-neo-black text-neo-black">
+                    {{ project.get_project_type_display }}
+                </span>
+            </div>
+
+            <!-- Status Badge -->
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border border-neo-black
+                {% if project.status == 'open' %}bg-emerald-100 text-emerald-900
+                {% elif project.status == 'in_progress' %}bg-blue-100 text-blue-900
+                {% elif project.status == 'review' %}bg-amber-100 text-amber-900
+                {% elif project.status == 'completed' %}bg-purple-100 text-purple-900
+                {% else %}bg-zinc-200 text-zinc-800{% endif %}">
+                <span class="w-1.5 h-1.5 rounded-full {% if project.status == 'open' %}bg-emerald-500 animate-pulse{% elif project.status == 'in_progress' %}bg-blue-500{% elif project.status == 'review' %}bg-amber-500{% elif project.status == 'completed' %}bg-purple-500{% else %}bg-zinc-500{% endif %}"></span>
+                {{ project.get_status_display }}
+            </span>
+        </div>
+
+        <!-- Project Title -->
+        <h3 class="text-xl font-black text-neo-black mb-2 leading-snug group-hover:underline">
+            <a href="{% url 'projects:detail' project.slug %}">{{ project.title }}</a>
+        </h3>
+
+        <!-- Description Excerpt -->
+        <p class="text-sm text-zinc-600 line-clamp-2 mb-4 font-medium leading-relaxed">
+            {{ project.description|truncatewords:28 }}
+        </p>
+
+        <!-- Required Skills -->
+        <div class="flex flex-wrap gap-1.5 mb-5">
+            {% for skill in project.required_skills.all|slice:":4" %}
+                <span class="px-2 py-0.5 bg-zinc-100 border border-neo-black rounded text-[11px] font-bold font-mono text-neo-black">
+                    #{{ skill.name }}
+                </span>
+            {% empty %}
+                <span class="text-xs text-zinc-400 italic">Open skill requirements</span>
+            {% endfor %}
+            {% if project.required_skills.count > 4 %}
+                <span class="px-1.5 py-0.5 bg-neo-bg border border-neo-black rounded text-[10px] font-bold font-mono">
+                    +{{ project.required_skills.count|add:"-4" }}
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bottom Pricing & CTA -->
+    <div class="pt-4 border-t-2 border-neo-black flex items-center justify-between mt-auto">
+        <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-bold block">Budget Range</span>
+            <span class="text-lg font-black text-neo-black">
+                ${{ project.budget_min|floatformat:0 }} - ${{ project.budget_max|floatformat:0 }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            {% if user.is_authenticated and user.is_freelancer_user %}
+                <form method="post" action="{% url 'projects:toggle_save' project.id %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" title="Bookmark Project" class="p-2 rounded-xl border-2 border-neo-black bg-white shadow-neo-sm hover:bg-neo-yellow transition">
+                        <i data-lucide="bookmark" class="w-4 h-4 text-neo-black"></i>
+                    </button>
+                </form>
+            {% endif %}
+
+            <a href="{% url 'projects:detail' project.slug %}" class="btn-neo-yellow btn-neo-sm flex items-center gap-1.5">
+                <span>View</span>
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
+    </div>
+</div>

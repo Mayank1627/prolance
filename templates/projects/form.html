@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-10">
+
+    <div class="mb-6">
+        <a href="{% if is_edit %}{% url 'projects:detail' project.slug %}{% else %}{% url 'core:client_dashboard' %}{% endif %}" class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-zinc-600 hover:text-neo-black uppercase tracking-wider mb-2">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Cancel and Go Back</span>
+        </a>
+        <h1 class="text-3xl font-black text-neo-black">{{ page_title }}</h1>
+        <p class="text-sm font-medium text-zinc-600 mt-1">Define precise requirements and milestones to attract experienced talent.</p>
+    </div>
+
+    <div class="card-neo bg-white p-8">
+        <form method="post" class="space-y-6" novalidate>
+            {% csrf_token %}
+
+            <!-- Title -->
+            <div>
+                <label for="{{ form.title.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                    Project Title <span class="text-neo-coral">*</span>
+                </label>
+                {{ form.title }}
+                {% if form.title.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.title.errors.0 }}</p>{% endif %}
+            </div>
+
+            <!-- Category & Project Type -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.category.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                        Category <span class="text-neo-coral">*</span>
+                    </label>
+                    {{ form.category }}
+                    {% if form.category.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.category.errors.0 }}</p>{% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.project_type.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                        Contract Type <span class="text-neo-coral">*</span>
+                    </label>
+                    {{ form.project_type }}
+                    {% if form.project_type.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.project_type.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+
+            <!-- Budget Min & Max -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.budget_min.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                        Minimum Budget ($ USD) <span class="text-neo-coral">*</span>
+                    </label>
+                    {{ form.budget_min }}
+                    {% if form.budget_min.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.budget_min.errors.0 }}</p>{% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.budget_max.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                        Maximum Budget ($ USD) <span class="text-neo-coral">*</span>
+                    </label>
+                    {{ form.budget_max }}
+                    {% if form.budget_max.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.budget_max.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+
+            <!-- Deadline -->
+            <div>
+                <label for="{{ form.deadline.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                    Target Completion Deadline <span class="text-neo-coral">*</span>
+                </label>
+                {{ form.deadline }}
+                {% if form.deadline.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.deadline.errors.0 }}</p>{% endif %}
+            </div>
+
+            <!-- Required Skills Multiple Select -->
+            <div>
+                <label for="{{ form.required_skills.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                    Required Skills (Hold Ctrl / Cmd to select multiple)
+                </label>
+                {{ form.required_skills }}
+                <p class="text-[11px] font-mono text-zinc-500 mt-1">Assign keywords to help matching candidates discover your listing.</p>
+                {% if form.required_skills.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.required_skills.errors.0 }}</p>{% endif %}
+            </div>
+
+            <!-- Detailed Description -->
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1.5">
+                    Detailed Scope & Deliverables <span class="text-neo-coral">*</span>
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="pt-4 border-t-2 border-neo-black flex items-center justify-between">
+                <a href="{% if is_edit %}{% url 'projects:detail' project.slug %}{% else %}{% url 'core:client_dashboard' %}{% endif %}" class="btn-neo-white btn-neo-sm">
+                    Discard
+                </a>
+                <button type="submit" class="btn-neo-yellow py-3 px-8 text-base">
+                    {% if is_edit %}Save Changes{% else %}Publish Project Listing{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

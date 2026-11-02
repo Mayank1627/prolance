@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Hiring Decision | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 py-16">
+    <div class="card-neo bg-white p-8">
+        <div class="w-14 h-14 rounded-2xl bg-neo-yellow border-2 border-neo-black flex items-center justify-center mb-5 shadow-neo-sm">
+            <i data-lucide="handshake" class="w-7 h-7 text-neo-black"></i>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl font-black text-neo-black mb-2">Hire {{ proposal.freelancer.get_display_name }}?</h1>
+        <p class="text-sm text-zinc-600 mb-6 leading-relaxed font-medium">
+            You are accepting the proposal for <strong>"{{ project.title }}"</strong>. This will transition the project to <span class="font-bold text-neo-black">In Progress</span>, lock the agreed budget at <strong class="font-bold text-neo-black">${{ proposal.proposed_budget }}</strong>, and activate your private shared project workspace.
+        </p>
+
+        <div class="p-4 bg-neo-bg border-2 border-neo-black rounded-xl mb-6 space-y-2 text-xs font-mono">
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-bold">Freelancer:</span>
+                <span class="font-black text-neo-black">{{ proposal.freelancer.get_display_name }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-bold">Agreed Contract Price:</span>
+                <span class="font-black text-neo-black">${{ proposal.proposed_budget }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-bold">Estimated Delivery:</span>
+                <span class="font-black text-neo-black">{{ proposal.estimated_days }} calendar days</span>
+            </div>
+        </div>
+
+        <form method="post" class="flex items-center justify-end gap-3">
+            {% csrf_token %}
+            <a href="{% url 'proposals:project_proposals' project.slug %}" class="btn-neo-white btn-neo-sm">
+                Cancel
+            </a>
+            <button type="submit" class="btn-neo-yellow py-2.5 px-6 font-black text-sm flex items-center gap-2">
+                <span>Confirm Hire & Open Workspace</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

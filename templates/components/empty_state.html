@@ -1,0 +1,15 @@
+<div class="card-neo bg-white text-center py-12 px-6 max-w-xl mx-auto my-8">
+    <div class="w-16 h-16 rounded-2xl bg-neo-yellow border-2 border-neo-black flex items-center justify-center mx-auto mb-4 shadow-neo-sm">
+        <i data-lucide="{{ empty_icon|default:'inbox' }}" class="w-8 h-8 text-neo-black"></i>
+    </div>
+    <h3 class="text-xl font-black text-neo-black mb-2">{{ empty_title|default:'No Records Found' }}</h3>
+    <p class="text-sm font-medium text-zinc-600 mb-6 max-w-sm mx-auto leading-relaxed">
+        {{ empty_description|default:'There are currently no items matching your criteria in the system.' }}
+    </p>
+    {% if empty_action_url and empty_action_label %}
+        <a href="{{ empty_action_url }}" class="btn-neo-yellow inline-flex items-center gap-2">
+            <span>{{ empty_action_label }}</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+    {% endif %}
+</div>

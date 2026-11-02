@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: prolance
+    env: python
+    region: oregon
+    plan: starter # Starter plan required for Persistent Disk on Render
+    buildCommand: "pip install -r requirements.txt && npm install && npm run build:css && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn prolance_config.wsgi:application"
+    disk:
+      name: prolance-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SQLITE_DIR
+        value: /var/data
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: SECURE_SSL_REDIRECT
+        value: "True"

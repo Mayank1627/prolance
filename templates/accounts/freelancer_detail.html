@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ freelancer.get_display_name }} — {{ profile.headline|default:'Freelancer Profile' }} | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-12">
+
+    <!-- Hero Card Framing with Neo-Brutalist Stacking -->
+    <div class="card-neo bg-white p-8 sm:p-12 mb-10 relative overflow-hidden">
+        
+        <!-- Top Row: Tags & Availability -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-neo-yellow border-2 border-neo-black shadow-neo-sm">
+                    Verified Freelancer
+                </span>
+                {% if profile.is_available %}
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border-2 border-neo-black bg-emerald-100 text-emerald-950 shadow-neo-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Available for Freelance
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border-2 border-neo-black bg-zinc-100 text-zinc-700 shadow-neo-sm">
+                        Unavailable
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated and user == freelancer %}
+                <a href="{% url 'accounts:edit_profile' %}" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    <span>Edit Profile</span>
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Main Identity Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            
+            <div class="md:col-span-2 space-y-4">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-zinc-500">
+                    HI, MY NAME IS {{ freelancer.get_display_name|upper }}.
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-black text-neo-black tracking-tight leading-tight">
+                    {{ profile.headline|default:"Full-Stack Engineering & High-Conviction Design." }}
+                </h1>
+                <p class="text-base text-zinc-700 font-medium leading-relaxed max-w-xl">
+                    {{ profile.bio|linebreaks }}
+                </p>
+
+                <!-- Action Links -->
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    {% if profile.portfolio_url %}
+                        <a href="{{ profile.portfolio_url }}" target="_blank" rel="noopener noreferrer" class="btn-neo-yellow btn-neo-sm flex items-center gap-1.5">
+                            <i data-lucide="globe" class="w-4 h-4"></i>
+                            <span>Portfolio Demo</span>
+                        </a>
+                    {% endif %}
+                    {% if profile.github_url %}
+                        <a href="{{ profile.github_url }}" target="_blank" rel="noopener noreferrer" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                            <i data-lucide="github" class="w-4 h-4"></i>
+                            <span>GitHub</span>
+                        </a>
+                    {% endif %}
+                    {% if profile.linkedin_url %}
+                        <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                            <i data-lucide="linkedin" class="w-4 h-4"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Avatar & Vital Stats Badge -->
+            <div class="flex flex-col items-center md:items-end">
+                <div class="relative">
+                    <img src="{{ profile.get_avatar_url }}" alt="{{ freelancer.get_display_name }}" 
+                         class="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl border-3 border-neo-black object-cover shadow-neo-lg bg-yellow-100">
+                    <div class="absolute -bottom-3 -left-3 bg-white border-2 border-neo-black rounded-xl px-3 py-1.5 shadow-neo-sm flex items-center gap-1.5">
+                        <i data-lucide="star" class="w-4 h-4 text-neo-yellow fill-neo-yellow"></i>
+                        <span class="font-black text-sm text-neo-black">{{ profile.average_rating }}</span>
+                        <span class="text-xs text-zinc-500 font-mono">({{ profile.total_reviews }} reviews)</span>
+                    </div>
+                </div>
+
+                <div class="mt-8 grid grid-cols-2 gap-3 w-full max-w-[200px]">
+                    <div class="p-3 bg-neo-bg border-2 border-neo-black rounded-xl text-center">
+                        <span class="text-[10px] font-mono uppercase text-zinc-500 font-bold block">Rate</span>
+                        <span class="font-black text-lg text-neo-black">${{ profile.hourly_rate }}/hr</span>
+                    </div>
+                    <div class="p-3 bg-neo-bg border-2 border-neo-black rounded-xl text-center">
+                        <span class="text-[10px] font-mono uppercase text-zinc-500 font-bold block">Experience</span>
+                        <span class="font-black text-lg text-neo-black">{{ profile.experience_years }}+ yrs</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Completed Projects & Client Reviews -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Column 1: Completed Projects on Platform -->
+        <div>
+            <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-neo-black">
+                <h2 class="text-xl font-black text-neo-black flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-5 h-5 text-neo-mint"></i>
+                    <span>Completed Projects ({{ completed_projects.count }})</span>
+                </h2>
+            </div>
+
+            <div class="space-y-4">
+                {% for project in completed_projects %}
+                    <div class="card-neo bg-white p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono font-bold text-zinc-500">Delivered {{ project.updated_at|date:"M Y" }}</span>
+                            <span class="badge-neo bg-emerald-100 text-emerald-900">Completed</span>
+                        </div>
+                        <h4 class="font-black text-lg text-neo-black mb-1">
+                            <a href="{% url 'projects:detail' project.slug %}" class="hover:underline">{{ project.title }}</a>
+                        </h4>
+                        <p class="text-xs text-zinc-600 line-clamp-2 mb-3">{{ project.description }}</p>
+                        <div class="text-xs font-mono font-bold text-zinc-500">
+                            Client: {{ project.client.get_display_name }} • Budget: ${{ project.agreed_budget|default:project.budget_max }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="p-8 text-center bg-white border-2 border-dashed border-zinc-300 rounded-2xl">
+                        <p class="text-sm font-bold text-zinc-500">No completed projects recorded on Prolance yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Column 2: Client Reviews & Ratings -->
+        <div>
+            <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-neo-black">
+                <h2 class="text-xl font-black text-neo-black flex items-center gap-2">
+                    <i data-lucide="message-square" class="w-5 h-5 text-neo-coral"></i>
+                    <span>Client Testimonials ({{ reviews.count }})</span>
+                </h2>
+            </div>
+
+            <div class="space-y-4">
+                {% for review in reviews %}
+                    <div class="card-neo bg-white p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-1 text-neo-yellow">
+                                {% for i in "12345" %}
+                                    <i data-lucide="star" class="w-4 h-4 {% if forloop.counter <= review.rating %}fill-neo-yellow text-neo-black{% else %}text-zinc-300{% endif %}"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="text-xs font-mono text-zinc-500">{{ review.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <p class="text-sm text-zinc-700 font-medium italic mb-3">
+                            "{{ review.feedback }}"
+                        </p>
+                        <div class="flex items-center gap-2 pt-2 border-t border-zinc-100">
+                            <span class="text-xs font-bold text-neo-black">{{ review.reviewer.get_display_name }}</span>
+                            <span class="text-xs text-zinc-400">• {{ review.project.title|truncatechars:25 }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="p-8 text-center bg-white border-2 border-dashed border-zinc-300 rounded-2xl">
+                        <p class="text-sm font-bold text-zinc-500">No verified reviews submitted yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

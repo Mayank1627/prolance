@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Close Project | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-16">
+    <div class="card-neo bg-white p-8">
+        <div class="w-12 h-12 rounded-xl bg-red-100 border-2 border-neo-black flex items-center justify-center mb-4 text-red-600">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h1 class="text-2xl font-black text-neo-black mb-2">Close Project Listing?</h1>
+        <p class="text-sm text-zinc-600 mb-6 leading-relaxed">
+            Are you sure you wish to close <strong>"{{ project.title }}"</strong>? Closed projects will no longer receive proposals and will be archived from public discovery.
+        </p>
+
+        <form method="post" class="flex items-center justify-end gap-3">
+            {% csrf_token %}
+            <a href="{% url 'projects:detail' project.slug %}" class="btn-neo-white btn-neo-sm">
+                Keep Open
+            </a>
+            <button type="submit" class="btn-neo-coral py-2 px-5 text-sm font-bold">
+                Confirm & Close Project
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}Prolance — Where Direct Talent Meets Serious Projects{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-16">
+
+    <!-- Flagship Neo-Brutalist Hero Card Frame (Inspired directly by kristi.digital & NEOX Studio) -->
+    <div class="card-neo bg-white p-8 sm:p-14 border-3 relative overflow-hidden shadow-neo-xl">
+        
+        <!-- Decorative Floating Badges / Stickers -->
+        <div class="hidden lg:flex absolute top-8 right-10 items-center gap-2 rotate-2 hover:rotate-0 transition-transform">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-950 border-2 border-neo-black shadow-neo-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Open Marketplace
+            </span>
+        </div>
+
+        <div class="hidden lg:flex absolute bottom-8 right-12 items-center gap-2 -rotate-3 hover:rotate-0 transition-transform">
+            <div class="bg-neo-yellow border-2 border-neo-black rounded-2xl px-4 py-2 font-mono text-xs font-black shadow-neo-sm">
+                ✦ 100% DJANGO MONOLITH
+            </div>
+        </div>
+
+        <div class="max-w-3xl space-y-6">
+            
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-neo-bg border-2 border-neo-black text-xs font-mono font-bold uppercase shadow-neo-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-neo-yellow border border-neo-black"></span>
+                <span>The Editorial Freelance Exchange</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-neo-black tracking-tight leading-[1.05]">
+                HIRE FOR IMPACT.<br>
+                BUILD FOR <span class="bg-neo-yellow px-2 underline decoration-4 decoration-neo-black">GROWTH.</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-zinc-700 font-medium max-w-xl leading-relaxed">
+                Connect directly with verified software engineers, UI/UX architects, and technical specialists. Scope clearly, hire with atomic transactions, and manage milestones in dedicated workspaces.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+                <a href="{% url 'projects:browse' %}" class="btn-neo-yellow text-base py-3.5 px-8 flex items-center gap-2 shadow-neo">
+                    <span>Find Open Work</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+                
+                <a href="{% url 'projects:create' %}" class="btn-neo-white text-base py-3.5 px-7 flex items-center gap-2 shadow-neo">
+                    <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                    <span>Publish a Project</span>
+                </a>
+            </div>
+
+            <!-- Trust Bullet Points -->
+            <div class="pt-6 border-t-2 border-neo-black flex flex-wrap items-center gap-6 font-mono text-xs font-bold text-zinc-600">
+                <span class="flex items-center gap-1.5">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i> No Blind Bidding
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i> Project-Scoped Workspaces
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <i data-lucide="star" class="w-4 h-4 text-amber-500"></i> Verified Peer Reviews
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Live Platform Telemetry Bar (Real Database Counts) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card-neo bg-white p-5 text-center">
+            <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Total Projects</span>
+            <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_projects }}</span>
+            <span class="text-[11px] font-mono text-emerald-600 font-bold">In System</span>
+        </div>
+
+        <div class="card-neo bg-white p-5 text-center">
+            <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Active Freelancers</span>
+            <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_freelancers }}</span>
+            <span class="text-[11px] font-mono text-indigo-600 font-bold">Vetted Profiles</span>
+        </div>
+
+        <div class="card-neo bg-white p-5 text-center">
+            <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Client Teams</span>
+            <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_clients }}</span>
+            <span class="text-[11px] font-mono text-zinc-500 font-bold">Hiring Worldwide</span>
+        </div>
+
+        <div class="card-neo bg-white p-5 text-center">
+            <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Peer Reviews</span>
+            <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_reviews }}</span>
+            <span class="text-[11px] font-mono text-amber-600 font-bold">Completed Contracts</span>
+        </div>
+    </div>
+
+    <!-- Project Categories Section -->
+    <div class="space-y-6">
+        <div class="flex items-end justify-between pb-3 border-b-2 border-neo-black">
+            <div>
+                <span class="text-xs font-mono font-bold uppercase text-zinc-500">Specializations</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-neo-black">Explore Core Disciplines</h2>
+            </div>
+            <a href="{% url 'projects:browse' %}" class="btn-neo-white btn-neo-sm hidden sm:flex items-center gap-1">
+                <span>All Categories</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {% for cat in categories %}
+                <a href="{% url 'projects:browse' %}?category={{ cat.slug }}" class="card-neo bg-white p-5 text-center flex flex-col items-center justify-between hover:-translate-y-1 transition group">
+                    <div class="w-12 h-12 rounded-xl border-2 border-neo-black flex items-center justify-center mb-3 shadow-neo-sm group-hover:rotate-6 transition-transform
+                        {% if cat.color_theme == 'yellow' %}bg-neo-yellow
+                        {% elif cat.color_theme == 'mint' %}bg-neo-mint
+                        {% elif cat.color_theme == 'indigo' %}bg-neo-indigo text-white
+                        {% elif cat.color_theme == 'coral' %}bg-neo-coral text-white
+                        {% elif cat.color_theme == 'pink' %}bg-neo-pink text-white
+                        {% else %}bg-neo-lime{% endif %}">
+                        <i data-lucide="{{ cat.icon|default:'layers' }}" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-black text-sm text-neo-black group-hover:underline">{{ cat.name }}</span>
+                    <span class="text-[11px] font-mono text-zinc-500 mt-1 font-bold">{{ cat.active_project_count }} open</span>
+                </a>
+            {% empty %}
+                <div class="col-span-full card-neo bg-white p-8 text-center">
+                    <p class="font-bold text-sm text-zinc-500">No project categories configured yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Featured Live Projects -->
+    <div class="space-y-6">
+        <div class="flex items-end justify-between pb-3 border-b-2 border-neo-black">
+            <div>
+                <span class="text-xs font-mono font-bold uppercase text-zinc-500">Live Contracts</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-neo-black">Recently Published Projects</h2>
+            </div>
+            <a href="{% url 'projects:browse' %}" class="btn-neo-yellow btn-neo-sm flex items-center gap-1">
+                <span>View Full Registry</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for project in featured_projects %}
+                {% include 'components/project_card.html' with project=project %}
+            {% empty %}
+                <div class="col-span-full">
+                    {% include 'components/empty_state.html' with empty_title="No Projects Published Yet" empty_description="Be the first client to publish an engineering project or design brief on Prolance." empty_action_url="/projects/create/" empty_action_label="Publish First Project" %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- How It Works (Numbered Editorial Process from Dodonut Reference) -->
+    <div class="card-neo bg-white p-8 sm:p-12 border-3">
+        <div class="max-w-xl mb-10">
+            <span class="inline-block px-3 py-1 rounded-full bg-neo-mint border-2 border-neo-black text-xs font-black uppercase tracking-wider shadow-neo-sm mb-3">
+                Methodology
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-black text-neo-black">How Prolance Works</h2>
+            <p class="text-sm font-medium text-zinc-600 mt-2">A three-stage contract lifecycle engineered for certainty and quality delivery.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y-2 md:divide-y-0 md:divide-x-2 divide-neo-black">
+            
+            <div class="space-y-3 pt-4 md:pt-0 md:pr-6">
+                <span class="font-mono text-3xl font-black text-neo-black block">01.</span>
+                <h3 class="text-xl font-black text-neo-black">Scope & Publish</h3>
+                <p class="text-sm text-zinc-600 font-medium leading-relaxed">
+                    Clients define project constraints, required tech stacks, deadlines, and minimum/maximum budget expectations.
+                </p>
+                <div class="pt-2 text-xs font-mono font-bold text-zinc-500">
+                    OUTPUT: Public Structured Listing
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-6 md:pt-0 md:px-6">
+                <span class="font-mono text-3xl font-black text-neo-black block">02.</span>
+                <h3 class="text-xl font-black text-neo-black">Bid & Atomic Hire</h3>
+                <p class="text-sm text-zinc-600 font-medium leading-relaxed">
+                    Freelancers propose custom delivery fees and timetables. Clients review candidate portfolios and hire via atomic database transactions.
+                </p>
+                <div class="pt-2 text-xs font-mono font-bold text-zinc-500">
+                    OUTPUT: Single Guaranteed Assignment
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-6 md:pt-0 md:pl-6">
+                <span class="font-mono text-3xl font-black text-neo-black block">03.</span>
+                <h3 class="text-xl font-black text-neo-black">Deliver & Review</h3>
+                <p class="text-sm text-zinc-600 font-medium leading-relaxed">
+                    Participants cooperate in dedicated project rooms. Deliverables are approved, status is finalized, and peer reviews reflect on public profiles.
+                </p>
+                <div class="pt-2 text-xs font-mono font-bold text-zinc-500">
+                    OUTPUT: Verified Completed Contract
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Featured Talent Showcase -->
+    {% if featured_freelancers %}
+        <div class="space-y-6">
+            <div class="flex items-end justify-between pb-3 border-b-2 border-neo-black">
+                <div>
+                    <span class="text-xs font-mono font-bold uppercase text-zinc-500">Available Talent</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-neo-black">Meet Top-Rated Freelancers</h2>
+                </div>
+                <a href="{% url 'accounts:freelancers_list' %}" class="btn-neo-white btn-neo-sm flex items-center gap-1">
+                    <span>Explore Talent Directory</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for f in featured_freelancers %}
+                    <div class="card-neo card-neo-hover bg-white p-5 flex flex-col justify-between">
+                        <div>
+                            <img src="{{ f.freelancer_profile.get_avatar_url }}" alt="{{ f.get_display_name }}" class="w-16 h-16 rounded-2xl border-2 border-neo-black object-cover bg-yellow-100 shadow-neo-sm mb-4">
+                            <h3 class="font-black text-lg text-neo-black leading-tight hover:underline">
+                                <a href="{% url 'accounts:freelancer_profile_detail' f.username %}">{{ f.get_display_name }}</a>
+                            </h3>
+                            <p class="text-xs font-bold text-zinc-600 line-clamp-1 mt-1">{{ f.freelancer_profile.headline|default:"Software Engineer" }}</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t-2 border-neo-black flex items-center justify-between text-xs font-mono">
+                            <span class="font-black text-neo-black">${{ f.freelancer_profile.hourly_rate }}/hr</span>
+                            <span class="font-bold text-amber-600 flex items-center gap-1">
+                                <i data-lucide="star" class="w-3 h-3 fill-amber-500"></i> {{ f.freelancer_profile.average_rating }}
+                            </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Bottom Callout Card -->
+    <div class="card-neo bg-neo-yellow p-8 sm:p-12 border-3 text-center space-y-4">
+        <h2 class="text-3xl sm:text-4xl font-black text-neo-black tracking-tight">
+            Ready to Build With High-Conviction Talent?
+        </h2>
+        <p class="text-base text-zinc-800 font-medium max-w-lg mx-auto">
+            Join thousands of founders, design studios, and engineers transacting on Prolance.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <a href="{% url 'accounts:register' %}" class="btn-neo-black py-3 px-8 text-base">
+                Get Started Now
+            </a>
+            <a href="{% url 'projects:browse' %}" class="btn-neo-white py-3 px-6 text-base">
+                Browse Directory
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

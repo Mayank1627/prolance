@@ -1,0 +1,32 @@
+{% if is_paginated %}
+<div class="flex flex-wrap items-center justify-center gap-2 mt-10 select-none">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+           class="btn-neo-white btn-neo-sm flex items-center gap-1">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            <span>Prev</span>
+        </a>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="w-9 h-9 rounded-lg border-2 border-neo-black bg-neo-yellow font-black text-sm flex items-center justify-center shadow-neo-sm">
+                {{ num }}
+            </span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+               class="w-9 h-9 rounded-lg border-2 border-neo-black bg-white hover:bg-neo-bg font-bold text-sm flex items-center justify-center shadow-neo-sm transition">
+                {{ num }}
+            </a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+           class="btn-neo-white btn-neo-sm flex items-center gap-1">
+            <span>Next</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </a>
+    {% endif %}
+</div>
+{% endif %}

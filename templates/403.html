@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}403 - Permission Denied | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-20 text-center">
+    <div class="card-neo bg-white p-10 sm:p-14">
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-neo-coral text-white border-3 border-neo-black shadow-neo mb-6">
+            <span class="text-4xl font-black">403</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-neo-black mb-3">Access Restricted</h1>
+        <p class="text-base font-medium text-zinc-600 mb-8 max-w-md mx-auto">
+            You do not possess the required role permissions or project ownership to access this resource. Prolance strictly validates authority on the server.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="{% url 'core:dashboard' %}" class="btn-neo-yellow">
+                <i data-lucide="layout-grid" class="w-4 h-4 mr-2"></i> Return to Dashboard
+            </a>
+            <a href="{% url 'core:landing' %}" class="btn-neo-white">
+                <i data-lucide="home" class="w-4 h-4 mr-2"></i> Go to Homepage
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

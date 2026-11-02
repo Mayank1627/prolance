@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Off & Complete Project | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-16">
+    <div class="card-neo bg-white p-8">
+        <div class="w-14 h-14 rounded-2xl bg-neo-mint border-2 border-neo-black flex items-center justify-center mb-5 shadow-neo-sm">
+            <i data-lucide="award" class="w-7 h-7 text-neo-black"></i>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl font-black text-neo-black mb-2">Sign Off on Project?</h1>
+        <p class="text-sm text-zinc-600 mb-6 leading-relaxed font-medium">
+            Are you satisfied with all deliverables for <strong>"{{ project.title }}"</strong>? Confirming completion marks the project as finished and opens the review evaluation stage.
+        </p>
+
+        <form method="post" class="flex items-center justify-end gap-3">
+            {% csrf_token %}
+            <a href="{% url 'workspace:room' project.slug %}" class="btn-neo-white btn-neo-sm">
+                Return to Workspace
+            </a>
+            <button type="submit" class="btn-neo-mint py-2.5 px-6 font-black text-sm flex items-center gap-2">
+                <span>Confirm Completion</span>
+                <i data-lucide="check" class="w-4 h-4"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F7F4EB;
+    color: #121212;
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: #FFE600;
+    color: #121212;
+  }
+}
+
+@layer components {
+  /* Neo-brutalist Button Styles */
+  .btn-neo {
+    @apply inline-flex items-center justify-center font-bold px-5 py-2.5 rounded-xl border-2 border-neo-black transition-all duration-150 select-none;
+    box-shadow: 3px 3px 0px 0px #121212;
+  }
+
+  .btn-neo:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px 0px #121212;
+  }
+
+  .btn-neo:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px 0px #121212;
+  }
+
+  .btn-neo-yellow {
+    @apply btn-neo bg-neo-yellow text-neo-black hover:bg-neo-yellow-hover;
+  }
+
+  .btn-neo-mint {
+    @apply btn-neo bg-neo-mint text-neo-black hover:bg-neo-mint-hover;
+  }
+
+  .btn-neo-white {
+    @apply btn-neo bg-white text-neo-black hover:bg-neo-gray-light;
+  }
+
+  .btn-neo-black {
+    @apply btn-neo bg-neo-black text-white hover:bg-zinc-800;
+    box-shadow: 3px 3px 0px 0px #FFE600;
+  }
+  
+  .btn-neo-coral {
+    @apply btn-neo bg-neo-coral text-white hover:bg-orange-600;
+  }
+
+  .btn-neo-sm {
+    @apply px-3 py-1.5 text-xs font-bold rounded-lg border-2 border-neo-black;
+    box-shadow: 2px 2px 0px 0px #121212;
+  }
+  
+  .btn-neo-sm:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px 0px #121212;
+  }
+
+  .btn-neo-sm:active {
+    transform: translate(1px, 1px);
+    box-shadow: 0px 0px 0px 0px #121212;
+  }
+
+  /* Neo Card Base */
+  .card-neo {
+    @apply bg-white border-2 border-neo-black rounded-2xl p-6 transition-all;
+    box-shadow: 4px 4px 0px 0px #121212;
+  }
+
+  .card-neo-hover:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #121212;
+  }
+
+  /* Form Inputs Outlined Neo */
+  .input-neo {
+    @apply w-full rounded-xl border-2 border-neo-black bg-white px-4 py-2.5 text-neo-black placeholder-zinc-400 font-medium transition focus:outline-none;
+    box-shadow: 2px 2px 0px 0px #121212;
+  }
+
+  .input-neo:focus {
+    box-shadow: 3px 3px 0px 0px #FFE600;
+    border-color: #121212;
+  }
+
+  /* Neo Badges */
+  .badge-neo {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border-2 border-neo-black;
+    box-shadow: 2px 2px 0px 0px #121212;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F4EB;
+  border-left: 2px solid #121212;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFE600;
+  border: 2px solid #121212;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2DD4BF;
+}

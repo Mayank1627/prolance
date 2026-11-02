@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluate Proposals — {{ project.title }} | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <a href="{% url 'projects:detail' project.slug %}" class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-zinc-600 hover:text-neo-black uppercase tracking-wider mb-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Back to Project Page</span>
+            </a>
+            <h1 class="text-3xl font-black text-neo-black">Candidate Proposals ({{ proposals.count }})</h1>
+            <p class="text-sm font-medium text-zinc-600 mt-1">Review applicant profiles, evaluate proposed budgets, and select your freelancer.</p>
+        </div>
+
+        <div class="p-3 bg-white border-2 border-neo-black rounded-xl shadow-neo-sm font-mono text-xs">
+            <span class="text-zinc-500 block">Project Status:</span>
+            <span class="font-black text-sm uppercase text-neo-black">{{ project.get_status_display }}</span>
+        </div>
+    </div>
+
+    <!-- Proposals List -->
+    <div class="space-y-6">
+        {% for proposal in proposals %}
+            {% with candidate=proposal.freelancer profile=proposal.freelancer.freelancer_profile %}
+                <div class="card-neo bg-white p-6 sm:p-8 {% if proposal.status == 'accepted' %}border-4 border-neo-black bg-emerald-50 shadow-neo-lg{% endif %}">
+                    
+                    <!-- Candidate Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5 pb-5 border-b-2 border-neo-black">
+                        <div class="flex items-center gap-4">
+                            <img src="{{ profile.get_avatar_url }}" alt="{{ candidate.get_display_name }}" class="w-16 h-16 rounded-2xl border-2 border-neo-black object-cover bg-yellow-100 shadow-neo-sm">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-xl font-black text-neo-black hover:underline">
+                                        <a href="{% url 'accounts:freelancer_profile_detail' candidate.username %}" target="_blank">
+                                            {{ candidate.get_display_name }}
+                                        </a>
+                                    </h3>
+                                    <span class="text-xs font-mono text-zinc-500 font-bold">@{{ candidate.username }}</span>
+                                </div>
+                                <p class="text-xs font-bold text-zinc-700 mt-0.5">{{ profile.headline|default:"Freelance Specialist" }}</p>
+                                
+                                <div class="flex items-center gap-3 mt-1.5 text-xs font-mono text-zinc-600">
+                                    <span class="flex items-center gap-1 font-bold text-neo-black">
+                                        <i data-lucide="star" class="w-3.5 h-3.5 text-neo-yellow fill-neo-yellow"></i>
+                                        {{ profile.average_rating }} ({{ profile.total_reviews }} reviews)
+                                    </span>
+                                    <span>•</span>
+                                    <span>Standard Rate: ${{ profile.hourly_rate }}/hr</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proposal Price & Timeframe Callout -->
+                        <div class="text-left sm:text-right p-3 bg-neo-bg border-2 border-neo-black rounded-xl">
+                            <span class="text-[10px] font-mono uppercase text-zinc-500 font-bold block">Proposed Price</span>
+                            <span class="text-2xl font-black text-neo-black">${{ proposal.proposed_budget|floatformat:0 }}</span>
+                            <span class="text-xs font-mono text-zinc-600 block mt-0.5">Est. {{ proposal.estimated_days }} days delivery</span>
+                        </div>
+                    </div>
+
+                    <!-- Cover Letter Content -->
+                    <div class="space-y-2 mb-6">
+                        <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500">Proposal & Strategy</h4>
+                        <div class="p-4 bg-neo-bg border border-zinc-300 rounded-xl text-sm text-zinc-800 leading-relaxed whitespace-pre-line font-medium">
+                            {{ proposal.cover_letter }}
+                        </div>
+                    </div>
+
+                    {% if proposal.portfolio_link %}
+                        <div class="mb-6 flex items-center gap-2 text-xs font-mono font-bold">
+                            <i data-lucide="link" class="w-4 h-4 text-neo-black"></i>
+                            <span class="text-zinc-500">Portfolio Demo:</span>
+                            <a href="{{ proposal.portfolio_link }}" target="_blank" rel="noopener noreferrer" class="text-neo-indigo underline truncate max-w-md">
+                                {{ proposal.portfolio_link }}
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <!-- Footer & Hiring Actions -->
+                    <div class="pt-4 border-t-2 border-neo-black flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-2">
+                            <span class="badge-neo 
+                                {% if proposal.status == 'accepted' %}bg-neo-mint text-neo-black
+                                {% elif proposal.status == 'rejected' %}bg-zinc-200 text-zinc-700
+                                {% elif proposal.status == 'withdrawn' %}bg-zinc-100 text-zinc-500
+                                {% else %}bg-neo-yellow text-neo-black{% endif %}">
+                                Status: {{ proposal.get_status_display }}
+                            </span>
+                            <span class="text-xs font-mono text-zinc-500">Submitted {{ proposal.created_at|date:"M d, Y" }}</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center gap-2">
+                            <a href="{% url 'accounts:freelancer_profile_detail' candidate.username %}" target="_blank" class="btn-neo-white btn-neo-sm">
+                                View Profile
+                            </a>
+
+                            {% if project.status == 'open' and proposal.status == 'pending' %}
+                                <form method="post" action="{% url 'proposals:reject' proposal.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" onclick="return confirm('Decline this proposal?')" class="btn-neo-white btn-neo-sm text-zinc-600 hover:text-red-700">
+                                        Decline
+                                    </button>
+                                </form>
+
+                                <a href="{% url 'proposals:accept' proposal.id %}" class="btn-neo-yellow btn-neo-sm flex items-center gap-1.5 px-4">
+                                    <i data-lucide="check" class="w-4 h-4"></i>
+                                    <span>Accept & Hire</span>
+                                </a>
+                            {% elif proposal.status == 'accepted' %}
+                                <a href="{% url 'workspace:room' project.slug %}" class="btn-neo-mint btn-neo-sm flex items-center gap-1.5">
+                                    <i data-lucide="layers" class="w-4 h-4"></i>
+                                    <span>Go to Workspace</span>
+                                </a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+            {% endwith %}
+        {% empty %}
+            <div class="card-neo bg-white py-12 text-center">
+                {% include 'components/empty_state.html' with empty_icon="users" empty_title="No Proposals Received Yet" empty_description="Your project listing is currently open for discovery. Freelancers will appear here once proposals are submitted." empty_action_url="/projects/" empty_action_label="View All Projects" %}
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% load static %}
+<nav class="bg-white border-b-2.5 border-neo-black sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            
+            <!-- Brand Logo / Wordmark -->
+            <div class="flex items-center gap-8">
+                <a href="{% url 'core:landing' %}" class="flex items-center gap-2.5 group">
+                    <div class="w-10 h-10 rounded-xl bg-neo-yellow border-2 border-neo-black flex items-center justify-center font-black text-xl shadow-neo-sm group-hover:rotate-6 transition-transform">
+                        P
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-black text-2xl tracking-tight text-neo-black">PROLANCE</span>
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-zinc-500 -mt-1 font-bold">PROJECT MARKET</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Public Nav Links -->
+                <div class="hidden md:flex items-center gap-1 font-bold text-sm">
+                    <a href="{% url 'projects:browse' %}" class="px-3.5 py-2 rounded-lg hover:bg-neo-bg transition-colors border border-transparent hover:border-neo-black text-neo-black">
+                        Browse Projects
+                    </a>
+                    <a href="{% url 'accounts:freelancers_list' %}" class="px-3.5 py-2 rounded-lg hover:bg-neo-bg transition-colors border border-transparent hover:border-neo-black text-neo-black">
+                        Find Freelancers
+                    </a>
+                    <a href="{% url 'core:how_it_works' %}" class="px-3.5 py-2 rounded-lg hover:bg-neo-bg transition-colors border border-transparent hover:border-neo-black text-neo-black">
+                        How It Works
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Actions & User Menu -->
+            <div class="hidden md:flex items-center gap-4">
+                {% if user.is_authenticated %}
+                    
+                    <!-- Role-Specific Action Button -->
+                    {% if user.is_client_user %}
+                        <a href="{% url 'projects:create' %}" class="btn-neo-yellow text-sm py-2 px-4 flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Post a Project</span>
+                        </a>
+                        <a href="{% url 'core:client_dashboard' %}" class="btn-neo-white text-sm py-2 px-4 flex items-center gap-2">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    {% elif user.is_freelancer_user %}
+                        <a href="{% url 'projects:browse' %}" class="btn-neo-mint text-sm py-2 px-4 flex items-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            <span>Find Work</span>
+                        </a>
+                        <a href="{% url 'core:freelancer_dashboard' %}" class="btn-neo-white text-sm py-2 px-4 flex items-center gap-2">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    {% endif %}
+
+                    <!-- Notifications Dropdown Trigger -->
+                    <div class="relative">
+                        <a href="{% url 'notifications:list' %}" class="w-10 h-10 rounded-xl bg-white border-2 border-neo-black shadow-neo-sm flex items-center justify-center relative hover:bg-neo-bg transition">
+                            <i data-lucide="bell" class="w-5 h-5 text-neo-black"></i>
+                            {% if unread_notifications_count > 0 %}
+                                <span class="absolute -top-1.5 -right-1.5 bg-neo-coral text-white text-[11px] font-black w-5 h-5 rounded-full border border-neo-black flex items-center justify-center shadow-sm">
+                                    {{ unread_notifications_count }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <!-- User Account Dropdown -->
+                    <div class="relative">
+                        <button type="button" onclick="toggleDropdown('user-dropdown-menu')" data-dropdown-toggle class="flex items-center gap-3 p-1.5 rounded-xl border-2 border-neo-black bg-white shadow-neo-sm hover:bg-neo-bg transition">
+                            <img src="{{ user.freelancer_profile.get_avatar_url|default:user.client_profile.get_avatar_url|default:'https://api.dicebear.com/7.x/bottts/svg?seed=Prolance&backgroundColor=FFE600' }}" 
+                                 alt="{{ user.get_display_name }}" 
+                                 class="w-8 h-8 rounded-lg border border-neo-black bg-yellow-100 object-cover">
+                            <div class="text-left hidden lg:block pr-1">
+                                <p class="text-xs font-black text-neo-black truncate max-w-[120px]">{{ user.get_display_name }}</p>
+                                <span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold uppercase tracking-wider 
+                                    {% if user.is_client_user %}bg-neo-indigo text-white{% else %}bg-neo-mint text-neo-black{% endif %} border border-neo-black">
+                                    {{ user.role }}
+                                </span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-neo-black"></i>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div id="user-dropdown-menu" data-dropdown class="hidden absolute right-0 mt-2 w-56 bg-white border-2 border-neo-black rounded-xl shadow-neo z-50 py-2 divide-y-2 divide-neo-black">
+                            <div class="px-4 py-2.5">
+                                <p class="text-xs text-zinc-500 font-mono">Signed in as</p>
+                                <p class="text-sm font-bold text-neo-black truncate">{{ user.email }}</p>
+                            </div>
+                            <div class="py-1">
+                                <a href="{% url 'core:dashboard' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                    <i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard
+                                </a>
+                                {% if user.is_freelancer_user %}
+                                    <a href="{% url 'accounts:freelancer_profile_detail' user.username %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                        <i data-lucide="user" class="w-4 h-4"></i> View Public Profile
+                                    </a>
+                                    <a href="{% url 'accounts:edit_profile' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                        <i data-lucide="settings" class="w-4 h-4"></i> Edit Profile & Skills
+                                    </a>
+                                    <a href="{% url 'projects:saved_list' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                        <i data-lucide="bookmark" class="w-4 h-4"></i> Bookmarked Projects
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'accounts:edit_profile' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                        <i data-lucide="building" class="w-4 h-4"></i> Company Profile
+                                    </a>
+                                    <a href="{% url 'projects:create' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Post New Project
+                                    </a>
+                                {% endif %}
+                                <a href="{% url 'accounts:password_change' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-black hover:bg-neo-yellow transition-colors">
+                                    <i data-lucide="key" class="w-4 h-4"></i> Change Password
+                                </a>
+                                {% if user.is_staff %}
+                                    <a href="/admin/" target="_blank" class="flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-neo-coral hover:bg-orange-100 transition-colors">
+                                        <i data-lucide="shield" class="w-4 h-4"></i> Django Admin
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="py-1">
+                                <form method="post" action="{% url 'accounts:logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="w-full text-left flex items-center gap-2.5 px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors">
+                                        <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <!-- Unauthenticated Actions -->
+                    <a href="{% url 'accounts:login' %}" class="font-bold text-sm text-neo-black px-4 py-2 hover:underline">
+                        Sign In
+                    </a>
+                    <a href="{% url 'accounts:register' %}" class="btn-neo-yellow text-sm py-2 px-5 flex items-center gap-2">
+                        <span>Get Started</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile Hamburger Toggle -->
+            <div class="flex md:hidden items-center gap-3">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'notifications:list' %}" class="w-9 h-9 rounded-lg bg-white border-2 border-neo-black shadow-neo-sm flex items-center justify-center relative">
+                        <i data-lucide="bell" class="w-4 h-4 text-neo-black"></i>
+                        {% if unread_notifications_count > 0 %}
+                            <span class="absolute -top-1 -right-1 bg-neo-coral text-white text-[10px] font-black w-4 h-4 rounded-full border border-neo-black flex items-center justify-center">
+                                {{ unread_notifications_count }}
+                            </span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+                <button type="button" onclick="toggleDropdown('mobile-menu')" class="p-2 rounded-xl border-2 border-neo-black bg-neo-yellow shadow-neo-sm">
+                    <i data-lucide="menu" class="w-6 h-6 text-neo-black"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t-2 border-neo-black bg-white px-4 pt-3 pb-6 space-y-3">
+        <a href="{% url 'projects:browse' %}" class="block py-2 text-base font-bold text-neo-black border-b border-zinc-200">
+            Browse Projects
+        </a>
+        <a href="{% url 'accounts:freelancers_list' %}" class="block py-2 text-base font-bold text-neo-black border-b border-zinc-200">
+            Find Freelancers
+        </a>
+        <a href="{% url 'core:how_it_works' %}" class="block py-2 text-base font-bold text-neo-black border-b border-zinc-200">
+            How It Works
+        </a>
+
+        {% if user.is_authenticated %}
+            <div class="pt-2 pb-1 bg-neo-bg p-3 rounded-xl border-2 border-neo-black">
+                <p class="text-xs font-mono uppercase text-zinc-500">Connected account</p>
+                <p class="font-black text-sm text-neo-black">{{ user.get_display_name }} ({{ user.role }})</p>
+            </div>
+            <a href="{% url 'core:dashboard' %}" class="btn-neo-white w-full text-center py-2.5">
+                Dashboard
+            </a>
+            {% if user.is_client_user %}
+                <a href="{% url 'projects:create' %}" class="btn-neo-yellow w-full text-center py-2.5">
+                    Post New Project
+                </a>
+            {% endif %}
+            <form method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-neo-coral w-full py-2.5 text-center mt-2">
+                    Sign Out
+                </button>
+            </form>
+        {% else %}
+            <div class="pt-3 flex flex-col gap-2.5">
+                <a href="{% url 'accounts:login' %}" class="btn-neo-white w-full text-center py-2.5">
+                    Sign In
+                </a>
+                <a href="{% url 'accounts:register' %}" class="btn-neo-yellow w-full text-center py-2.5">
+                    Register New Account
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</nav>

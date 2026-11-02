@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile | Prolance{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="mb-6 flex items-center justify-between">
+        <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-neo-yellow border-2 border-neo-black text-xs font-black uppercase tracking-wider shadow-neo-sm mb-2">
+                Account Settings
+            </span>
+            <h1 class="text-3xl font-black text-neo-black">Manage Your Profile</h1>
+        </div>
+        {% if user.is_freelancer_user %}
+            <a href="{% url 'accounts:freelancer_profile_detail' user.username %}" class="btn-neo-white btn-neo-sm flex items-center gap-1.5">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+                <span>Public View</span>
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="card-neo bg-white">
+        <form method="post" enctype="multipart/form-data" class="space-y-6" novalidate>
+            {% csrf_token %}
+
+            <!-- Current Avatar Preview & Full Name -->
+            <div class="p-4 rounded-xl border-2 border-neo-black bg-neo-bg flex flex-col sm:flex-row items-center gap-5">
+                <img src="{{ profile.get_avatar_url }}" alt="Profile Avatar" class="w-20 h-20 rounded-2xl border-2 border-neo-black object-cover bg-white shadow-neo-sm">
+                <div class="flex-grow w-full">
+                    <label class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                        Full Display Name
+                    </label>
+                    <input type="text" name="full_name" value="{{ user.full_name }}" class="input-neo" placeholder="Your Name or Studio Brand">
+                </div>
+            </div>
+
+            {% if user.is_freelancer_user %}
+                <!-- Freelancer Specific Fields -->
+                <div>
+                    <label for="{{ form.headline.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                        Professional Headline
+                    </label>
+                    {{ form.headline }}
+                    {% if form.headline.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.headline.errors.0 }}</p>{% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.hourly_rate.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Hourly Rate ($USD)
+                        </label>
+                        {{ form.hourly_rate }}
+                        {% if form.hourly_rate.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.hourly_rate.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.experience_years.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Experience (Years)
+                        </label>
+                        {{ form.experience_years }}
+                        {% if form.experience_years.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.experience_years.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="{{ form.bio.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                        Professional Biography & Approach
+                    </label>
+                    {{ form.bio }}
+                    {% if form.bio.errors %}<p class="text-xs font-bold text-neo-coral mt-1">{{ form.bio.errors.0 }}</p>{% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="{{ form.portfolio_url.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Portfolio Website
+                        </label>
+                        {{ form.portfolio_url }}
+                    </div>
+                    <div>
+                        <label for="{{ form.github_url.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            GitHub Profile
+                        </label>
+                        {{ form.github_url }}
+                    </div>
+                    <div>
+                        <label for="{{ form.linkedin_url.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            LinkedIn Profile
+                        </label>
+                        {{ form.linkedin_url }}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="{{ form.avatar.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                        Upload Avatar Image (Optional)
+                    </label>
+                    {{ form.avatar }}
+                </div>
+
+                <div class="p-4 rounded-xl border-2 border-neo-black bg-white flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-sm text-neo-black">Availability Status</p>
+                        <p class="text-xs text-zinc-500 font-medium">Show "Available for Freelance" pill on your profile and project cards.</p>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        {{ form.is_available }}
+                        <span class="text-xs font-bold font-mono">Open for Offers</span>
+                    </label>
+                </div>
+
+            {% else %}
+                <!-- Client Specific Fields -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.company_name.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Organization / Company Name
+                        </label>
+                        {{ form.company_name }}
+                    </div>
+                    <div>
+                        <label for="{{ form.company_website.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Website
+                        </label>
+                        {{ form.company_website }}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.industry.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Industry
+                        </label>
+                        {{ form.industry }}
+                    </div>
+                    <div>
+                        <label for="{{ form.location.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                            Location
+                        </label>
+                        {{ form.location }}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="{{ form.bio.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                        About the Organization
+                    </label>
+                    {{ form.bio }}
+                </div>
+
+                <div>
+                    <label for="{{ form.avatar.id_for_label }}" class="block text-xs font-mono font-bold uppercase tracking-wider text-neo-black mb-1">
+                        Company Logo / Icon
+                    </label>
+                    {{ form.avatar }}
+                </div>
+            {% endif %}
+
+            <div class="pt-4 border-t-2 border-neo-black flex items-center justify-between">
+                <a href="{% url 'accounts:password_change' %}" class="text-xs font-bold text-zinc-600 hover:text-neo-black underline">
+                    Change Account Password
+                </a>
+                <button type="submit" class="btn-neo-yellow py-2.5 px-6">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

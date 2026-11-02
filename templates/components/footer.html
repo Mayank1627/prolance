@@ -1,0 +1,73 @@
+<footer class="bg-white border-t-3 border-neo-black mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-10">
+            
+            <!-- Col 1: Brand & Manifesto -->
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-neo-yellow border-2 border-neo-black flex items-center justify-center font-black text-xl shadow-neo-sm">
+                        P
+                    </div>
+                    <span class="font-black text-2xl tracking-tight text-neo-black">PROLANCE</span>
+                </div>
+                <p class="text-sm font-medium text-zinc-600 max-w-sm leading-relaxed">
+                    A deliberate, high-conviction freelance marketplace connecting elite engineering and design talent with visionary clients. Built for transparency, atomic milestones, and zero fluff.
+                </p>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-neo-black bg-neo-bg text-xs font-mono font-bold shadow-neo-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-neo-mint border border-neo-black animate-pulse"></span>
+                    <span>ALL SYSTEMS OPERATIONAL (v1.0-STABLE)</span>
+                </div>
+            </div>
+
+            <!-- Col 2: For Clients -->
+            <div>
+                <h4 class="font-black text-xs uppercase tracking-wider text-neo-black mb-4 pb-1 border-b-2 border-neo-black inline-block">
+                    For Clients
+                </h4>
+                <ul class="space-y-2.5 text-sm font-bold text-zinc-700">
+                    <li><a href="{% url 'projects:create' %}" class="hover:text-neo-coral transition-colors">Post a Project</a></li>
+                    <li><a href="{% url 'accounts:freelancers_list' %}" class="hover:text-neo-coral transition-colors">Browse Talent Directory</a></li>
+                    <li><a href="{% url 'core:client_dashboard' %}" class="hover:text-neo-coral transition-colors">Client Workspace</a></li>
+                    <li><a href="{% url 'core:how_it_works' %}#clients" class="hover:text-neo-coral transition-colors">Hiring Methodology</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: For Freelancers -->
+            <div>
+                <h4 class="font-black text-xs uppercase tracking-wider text-neo-black mb-4 pb-1 border-b-2 border-neo-black inline-block">
+                    For Freelancers
+                </h4>
+                <ul class="space-y-2.5 text-sm font-bold text-zinc-700">
+                    <li><a href="{% url 'projects:browse' %}" class="hover:text-neo-coral transition-colors">Explore Open Projects</a></li>
+                    <li><a href="{% url 'accounts:register' %}" class="hover:text-neo-coral transition-colors">Apply as Freelancer</a></li>
+                    <li><a href="{% url 'core:freelancer_dashboard' %}" class="hover:text-neo-coral transition-colors">Freelancer Dashboard</a></li>
+                    <li><a href="{% url 'core:how_it_works' %}#freelancers" class="hover:text-neo-coral transition-colors">Proposal Standards</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Platform Integrity -->
+            <div>
+                <h4 class="font-black text-xs uppercase tracking-wider text-neo-black mb-4 pb-1 border-b-2 border-neo-black inline-block">
+                    Integrity
+                </h4>
+                <ul class="space-y-2.5 text-sm font-bold text-zinc-700">
+                    <li><a href="{% url 'core:how_it_works' %}" class="hover:text-neo-coral transition-colors">How It Works</a></li>
+                    <li><a href="{% url 'reviews:report_content' %}" class="hover:text-neo-coral transition-colors">Trust & Safety Report</a></li>
+                    <li><a href="/admin/" target="_blank" class="hover:text-neo-coral transition-colors">Moderation Portal</a></li>
+                    <li><span class="text-zinc-400 font-mono text-xs">Django 5 + SQLite Architecture</span></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="mt-12 pt-6 border-t-2 border-neo-black flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-zinc-600">
+            <p>© 2026 Prolance. Full-Stack Academic Software Engineering Project.</p>
+            <div class="flex items-center gap-4 font-bold">
+                <span class="bg-neo-yellow px-2 py-0.5 rounded border border-neo-black text-neo-black">NO COOKIES TRACKED</span>
+                <span>SESSION AUTHENTICATED</span>
+                <span>NEO-BRUTALIST SPEC</span>
+            </div>
+        </div>
+    </div>
+</footer>
