@@ -2,6 +2,32 @@
 
 {% block title %}Prolance — Where Direct Talent Meets Serious Projects{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Neo-Brutalist Staggered Scroll-Reveal Animations */
+    .scroll-card-ready {
+        opacity: 0;
+        transform: translateY(34px) scale(0.96);
+        transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.55s cubic-bezier(0.34, 1.38, 0.64, 1);
+        will-change: opacity, transform;
+    }
+
+    .scroll-card-active {
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .scroll-card-ready {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-16">
 
@@ -69,25 +95,25 @@
 
     <!-- Live Platform Telemetry Bar (Real Database Counts) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="card-neo bg-white p-5 text-center">
+        <div data-scroll-card class="card-neo bg-white p-5 text-center">
             <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Total Projects</span>
             <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_projects }}</span>
             <span class="text-[11px] font-mono text-emerald-600 font-bold">In System</span>
         </div>
 
-        <div class="card-neo bg-white p-5 text-center">
+        <div data-scroll-card class="card-neo bg-white p-5 text-center">
             <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Active Freelancers</span>
             <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_freelancers }}</span>
             <span class="text-[11px] font-mono text-indigo-600 font-bold">Vetted Profiles</span>
         </div>
 
-        <div class="card-neo bg-white p-5 text-center">
+        <div data-scroll-card class="card-neo bg-white p-5 text-center">
             <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Client Teams</span>
             <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_clients }}</span>
             <span class="text-[11px] font-mono text-zinc-500 font-bold">Hiring Worldwide</span>
         </div>
 
-        <div class="card-neo bg-white p-5 text-center">
+        <div data-scroll-card class="card-neo bg-white p-5 text-center">
             <span class="text-xs font-mono font-bold uppercase text-zinc-500 block">Peer Reviews</span>
             <span class="text-3xl sm:text-4xl font-black text-neo-black mt-1 block">{{ total_reviews }}</span>
             <span class="text-[11px] font-mono text-amber-600 font-bold">Completed Contracts</span>
@@ -109,7 +135,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {% for cat in categories %}
-                <a href="{% url 'projects:browse' %}?category={{ cat.slug }}" class="card-neo bg-white p-5 text-center flex flex-col items-center justify-between hover:-translate-y-1 transition group">
+                <a href="{% url 'projects:browse' %}?category={{ cat.slug }}" data-scroll-card class="card-neo bg-white p-5 text-center flex flex-col items-center justify-between hover:-translate-y-1 transition group">
                     <div class="w-12 h-12 rounded-xl border-2 border-neo-black flex items-center justify-center mb-3 shadow-neo-sm group-hover:rotate-6 transition-transform
                         {% if cat.color_theme == 'yellow' %}bg-neo-yellow
                         {% elif cat.color_theme == 'mint' %}bg-neo-mint
@@ -145,7 +171,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for project in featured_projects %}
-                {% include 'components/project_card.html' with project=project %}
+                <div data-scroll-card class="h-full">
+                    {% include 'components/project_card.html' with project=project %}
+                </div>
             {% empty %}
                 <div class="col-span-full">
                     {% include 'components/empty_state.html' with empty_title="No Projects Published Yet" empty_description="Be the first client to publish an engineering project or design brief on Prolance." empty_action_url="/projects/create/" empty_action_label="Publish First Project" %}
@@ -166,7 +194,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y-2 md:divide-y-0 md:divide-x-2 divide-neo-black">
             
-            <div class="space-y-3 pt-4 md:pt-0 md:pr-6">
+            <div data-scroll-card class="space-y-3 pt-4 md:pt-0 md:pr-6">
                 <span class="font-mono text-3xl font-black text-neo-black block">01.</span>
                 <h3 class="text-xl font-black text-neo-black">Scope & Publish</h3>
                 <p class="text-sm text-zinc-600 font-medium leading-relaxed">
@@ -177,7 +205,7 @@
                 </div>
             </div>
 
-            <div class="space-y-3 pt-6 md:pt-0 md:px-6">
+            <div data-scroll-card class="space-y-3 pt-6 md:pt-0 md:px-6">
                 <span class="font-mono text-3xl font-black text-neo-black block">02.</span>
                 <h3 class="text-xl font-black text-neo-black">Bid & Atomic Hire</h3>
                 <p class="text-sm text-zinc-600 font-medium leading-relaxed">
@@ -188,7 +216,7 @@
                 </div>
             </div>
 
-            <div class="space-y-3 pt-6 md:pt-0 md:pl-6">
+            <div data-scroll-card class="space-y-3 pt-6 md:pt-0 md:pl-6">
                 <span class="font-mono text-3xl font-black text-neo-black block">03.</span>
                 <h3 class="text-xl font-black text-neo-black">Deliver & Review</h3>
                 <p class="text-sm text-zinc-600 font-medium leading-relaxed">
@@ -218,7 +246,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {% for f in featured_freelancers %}
-                    <div class="card-neo card-neo-hover bg-white p-5 flex flex-col justify-between">
+                    <div data-scroll-card class="card-neo card-neo-hover bg-white p-5 flex flex-col justify-between">
                         <div>
                             <img src="{{ f.freelancer_profile.get_avatar_url }}" alt="{{ f.get_display_name }}" class="w-16 h-16 rounded-2xl border-2 border-neo-black object-cover bg-yellow-100 shadow-neo-sm mb-4">
                             <h3 class="font-black text-lg text-neo-black leading-tight hover:underline">
@@ -320,6 +348,71 @@
 
         // Initiate typing immediately when page opens
         setTimeout(typeLine1, 100);
+
+        // Neo-Brutalist Staggered Scroll-Reveal Card Animations
+        if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const cards = document.querySelectorAll('[data-scroll-card]');
+            if (cards.length > 0) {
+                // Initialize cards into hidden, offset state
+                cards.forEach(card => card.classList.add('scroll-card-ready'));
+
+                let staggerCounter = 0;
+                let staggerTimer = null;
+
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px 0px -40px 0px',
+                    threshold: 0.12
+                };
+
+                const cardObserver = new IntersectionObserver((entries) => {
+                    const intersecting = entries
+                        .filter(entry => entry.isIntersecting)
+                        .map(entry => entry.target);
+
+                    if (!intersecting.length) return;
+
+                    intersecting.forEach(card => {
+                        cardObserver.unobserve(card);
+
+                        // Incremental cascade delay for cards entering together
+                        const delay = staggerCounter * 75; // 75ms stagger wave
+                        staggerCounter++;
+
+                        clearTimeout(staggerTimer);
+                        staggerTimer = setTimeout(() => {
+                            staggerCounter = 0;
+                        }, 140);
+
+                        card.style.transitionDelay = `${delay}ms`;
+
+                        requestAnimationFrame(() => {
+                            card.classList.add('scroll-card-active');
+                        });
+
+                        // Clean up animation classes once transition concludes so standard CSS hover effects work seamlessly
+                        const onTransitionEnd = (e) => {
+                            if (!e || e.propertyName === 'transform') {
+                                card.removeEventListener('transitionend', onTransitionEnd);
+                                card.classList.remove('scroll-card-ready', 'scroll-card-active');
+                                card.style.transitionDelay = '';
+                                card.style.willChange = '';
+                            }
+                        };
+                        card.addEventListener('transitionend', onTransitionEnd);
+
+                        // Fallback safety cleanup
+                        setTimeout(() => {
+                            card.classList.remove('scroll-card-ready', 'scroll-card-active');
+                            card.style.transitionDelay = '';
+                            card.style.willChange = '';
+                        }, delay + 750);
+                    });
+                }, observerOptions);
+
+                cards.forEach(card => cardObserver.observe(card));
+            }
+        }
     });
 </script>
 {% endblock %}
