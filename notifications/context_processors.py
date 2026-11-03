@@ -11,3 +11,4 @@ def notification_counts(request):
         'unread_notifications_count': 0,
         'recent_notifications': [],
     }
+

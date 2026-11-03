@@ -8,3 +8,4 @@ urlpatterns = [
     path('<int:notification_id>/read/', views.mark_as_read_view, name='mark_read'),
     path('mark-all-read/', views.mark_all_read_view, name='mark_all_read'),
 ]
+

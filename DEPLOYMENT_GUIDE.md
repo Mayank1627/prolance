@@ -244,3 +244,4 @@ Verify each of the following flows immediately after deployment:
 ### 5. `sqlite3.OperationalError: database is locked`
 - **Cause**: Long-running background transactions with SQLite.
 - **Fix**: The default SQLite timeout has been tuned to 20 seconds in `settings.py` (`'timeout': 20`).
+

@@ -11,3 +11,4 @@ def global_context(request):
         context['user_is_client'] = request.user.is_client_user()
         context['user_is_freelancer'] = request.user.is_freelancer_user()
     return context
+

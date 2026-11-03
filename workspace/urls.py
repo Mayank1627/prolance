@@ -10,3 +10,4 @@ urlpatterns = [
     path('<slug:slug>/deliverable/<int:deliverable_id>/review/', views.review_deliverable_view, name='review_deliverable'),
     path('<slug:slug>/complete/', views.complete_project_view, name='complete_project'),
 ]
+

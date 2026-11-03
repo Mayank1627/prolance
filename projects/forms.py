@@ -62,3 +62,4 @@ class ProjectForm(forms.ModelForm):
             self.add_error('deadline', "Project deadline cannot be scheduled in the past.")
 
         return cleaned_data
+

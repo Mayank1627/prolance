@@ -12,3 +12,4 @@ urlpatterns = [
     path('talent/', views.freelancers_list_view, name='freelancers_list'),
     path('talent/<str:username>/', views.freelancer_detail_view, name='freelancer_profile_detail'),
 ]
+

@@ -189,3 +189,4 @@ Run the complete 32-test suite with:
 python manage.py test
 ```
 All tests run against a temporary in-memory database and verify authentication, project lifecycle, atomic hiring, workspace access control, and review validation.
+

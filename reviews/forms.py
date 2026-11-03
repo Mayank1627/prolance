@@ -46,3 +46,4 @@ class ReportForm(forms.ModelForm):
                 'placeholder': 'Provide clear context and links for the moderation team to inspect...',
             }),
         }
+

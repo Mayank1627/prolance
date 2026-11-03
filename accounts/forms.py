@@ -151,3 +151,4 @@ class ClientProfileForm(forms.ModelForm):
             'bio': forms.Textarea(attrs={'class': 'input-neo', 'rows': 4, 'placeholder': 'Company mission and typical project needs.'}),
             'avatar': forms.FileInput(attrs={'class': 'input-neo'}),
         }
+

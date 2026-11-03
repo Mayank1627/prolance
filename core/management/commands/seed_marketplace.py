@@ -403,3 +403,4 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(self.style.SUCCESS("Prolance marketplace database successfully seeded with realistic sample data!"))
+

@@ -10,3 +10,4 @@ urlpatterns = [
     path('<int:proposal_id>/accept/', views.accept_proposal_view, name='accept'),
     path('<int:proposal_id>/reject/', views.reject_proposal_view, name='reject'),
 ]
+

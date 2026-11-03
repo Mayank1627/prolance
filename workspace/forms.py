@@ -66,3 +66,4 @@ class ProjectMessageForm(forms.ModelForm):
         if not msg and not self.files.get('attachment'):
             raise forms.ValidationError("Cannot send an empty message.")
         return msg
+

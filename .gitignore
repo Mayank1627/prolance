@@ -1,53 +1,73 @@
-# Python & Bytecode
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python-generated files
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+*.pyo
+*.pyd
 
-# Django
-*.log
-local_settings.py
+# Local databases and database backups
 db.sqlite3
-db.sqlite3-journal
+db.sqlite3-*
+*.sqlite3
+*.sqlite3-journal
+*.db
+*.db-journal
+*.sql
+*.dump
+
+# User-uploaded files and local media
 media/
+uploads/
 staticfiles/
 
-# Node & Frontend Build
+# Local logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+
+# Test and coverage artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Python tooling
+.mypy_cache/
+.ruff_cache/
+
+# Node dependencies and logs
 node_modules/
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# Environment & Secrets
-.env
-.env.local
-.env.*.local
-
-# IDE & Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Operating system files
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# IDE settings
+.idea/
+.vscode/
+
+# Build and generated artifacts
+dist/
+build/
+*.egg-info/
+
+# Local secrets and private keys
+*.pem
+*.key
+*.p12
+*.pfx

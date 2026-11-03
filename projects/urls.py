@@ -12,3 +12,4 @@ urlpatterns = [
     path('<slug:slug>/close/', views.project_close_view, name='close'),
     path('<int:project_id>/toggle-save/', views.toggle_save_project_view, name='toggle_save'),
 ]
+

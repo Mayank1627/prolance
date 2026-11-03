@@ -42,3 +42,4 @@ class ProposalSubmissionForm(forms.ModelForm):
         if len(cover) < 30:
             raise forms.ValidationError("Please provide a more detailed proposal (at least 30 characters).")
         return cover
+

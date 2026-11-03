@@ -27,3 +27,4 @@ services:
         value: "https://*.onrender.com"
       - key: SECURE_SSL_REDIRECT
         value: "True"
+

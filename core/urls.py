@@ -10,3 +10,4 @@ urlpatterns = [
     path('dashboard/freelancer/', views.freelancer_dashboard_view, name='freelancer_dashboard'),
     path('dashboard/client/', views.client_dashboard_view, name='client_dashboard'),
 ]
+
