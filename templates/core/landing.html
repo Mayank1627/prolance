@@ -29,9 +29,9 @@
                 <span>The Editorial Freelance Exchange</span>
             </div>
 
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-neo-black tracking-tight leading-[1.05]">
-                HIRE FOR IMPACT.<br>
-                BUILD FOR <span class="bg-neo-yellow px-2 underline decoration-4 decoration-neo-black">GROWTH.</span>
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-neo-black tracking-tight leading-[1.08] min-h-[2.3em]" aria-label="HIRE FOR IMPACT. BUILD FOR GROWTH.">
+                <span id="typewriter-line-1"></span><br>
+                <span id="typewriter-line-2-text"></span><span id="typewriter-line-2-highlight" class="hidden bg-neo-yellow px-1 sm:px-2 underline decoration-4 decoration-neo-black"></span><span id="typewriter-cursor" class="inline-block w-2.5 sm:w-4 h-8 sm:h-12 lg:h-14 bg-neo-black align-middle ml-1 -mt-1 animate-pulse"></span>
             </h1>
 
             <p class="text-base sm:text-lg text-zinc-700 font-medium max-w-xl leading-relaxed">
@@ -257,5 +257,70 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const line1El = document.getElementById('typewriter-line-1');
+        const line2TextEl = document.getElementById('typewriter-line-2-text');
+        const line2HighlightEl = document.getElementById('typewriter-line-2-highlight');
+        const cursor = document.getElementById('typewriter-cursor');
+
+        if (!line1El || !line2TextEl || !line2HighlightEl) return;
+
+        const line1Text = "HIRE FOR IMPACT.";
+        const line2Text = "BUILD FOR ";
+        const line2Highlight = "GROWTH.";
+
+        let idx = 0;
+        const charDelay = 45; // ms per character
+
+        function typeLine1() {
+            if (idx < line1Text.length) {
+                line1El.textContent += line1Text.charAt(idx);
+                idx++;
+                setTimeout(typeLine1, charDelay);
+            } else {
+                idx = 0;
+                // Pause slightly before typing second line
+                setTimeout(typeLine2Text, 180);
+            }
+        }
+
+        function typeLine2Text() {
+            if (idx < line2Text.length) {
+                line2TextEl.textContent += line2Text.charAt(idx);
+                idx++;
+                setTimeout(typeLine2Text, charDelay);
+            } else {
+                idx = 0;
+                line2HighlightEl.classList.remove('hidden');
+                setTimeout(typeLine2Highlight, charDelay);
+            }
+        }
+
+        function typeLine2Highlight() {
+            if (idx < line2HighlightStrLen) {
+                line2HighlightEl.textContent += line2Highlight.charAt(idx);
+                idx++;
+                setTimeout(typeLine2Highlight, charDelay + 10);
+            } else {
+                // Keep cursor blinking for 4 seconds after completion, then gently fade out
+                setTimeout(() => {
+                    if (cursor) {
+                        cursor.style.transition = 'opacity 0.6s ease';
+                        cursor.style.opacity = '0';
+                    }
+                }, 4000);
+            }
+        }
+
+        const line2HighlightStrLen = line2Highlight.length;
+
+        // Initiate typing immediately when page opens
+        setTimeout(typeLine1, 100);
+    });
+</script>
 {% endblock %}
 
